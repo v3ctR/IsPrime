@@ -25,6 +25,7 @@ public:
     const BigNum operator- (const BigNum x) const;
     const BigNum operator* (const BigNum x) const;
     const BigNum operator/ (const BigNum x) const;
+    const BigNum operator% (const BigNum x) const;
 
     bool operator< (const BigNum& x) const;
     bool operator> (const BigNum& x) const;

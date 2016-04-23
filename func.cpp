@@ -304,7 +304,11 @@ const BigNum BigNum::operator* (const BigNum x) const
 const BigNum BigNum::operator/ (const BigNum x) const
 {
 	BigNum output,a1;
-	int diff;
+	const BigNum one("1");
+	const BigNum zero("0");
+
+	if(!x.number.back())
+        return EXIT_FAILURE;
 	if(this->positive == false && x.positive == true)
     {
         a1 = *this;
@@ -325,14 +329,12 @@ const BigNum BigNum::operator/ (const BigNum x) const
         a1.positive = true;
         return -(*this/a1);
     }
-	if(this->number.size() < x.number.size())
+	if(*this < x)
 	{
 		output.number.push_back(0);
 		return output;
 	}
 
-	if(!x.number.back())
-        return EXIT_FAILURE;
 
     if(*this == x)
         {
@@ -342,12 +344,85 @@ const BigNum BigNum::operator/ (const BigNum x) const
 
     if(this->number.size() > x.number.size())
 	{
+        int pos = this->number.size()-1;
+
+        while(pos>=0)
+        {
+            int NumberOf = 0;
+             while(a1 < x && pos>=0)
+            {
+                a1.number.insert(a1.number.begin(),this->number[pos]);
+                pos--; // index of el from *this
+                NumberOf++;
+            }
+
+            while(NumberOf > 1)
+            {
+                output.number.insert(output.number.begin(),0);
+                NumberOf--;
+            }
+
+            //cout << "a bef " << a1 << endl;
 
 
+            BigNum C("1");
+            while((a1 - (C+one)*x) > 0)
+                C++;
+
+            a1 = a1 - C*x;
+
+            //cout << "a aft " << a1 << endl;
+
+            if(a1 < zero)
+                output.number.insert(output.number.begin(),0);
+            else if(a1 > zero)
+                output.number.insert(output.number.begin(),C.number[0]);
+            else if(a1 == zero)
+            {
+                output.number.insert(output.number.begin(),C.number[0]);
+                a1.number.pop_back();
+            }
+        }
     }
+
+
+    while(!output.number.back())
+        output.number.pop_back();
 
     return output;
 
 
 }
 
+const BigNum BigNum::operator% (const BigNum x) const
+{
+    BigNum output;
+    output = *this;
+    output = output - (*this/x)*x;
+    return output;
+}
+
+ BigNum& BigNum::operator+= (const BigNum x)
+ {
+    return *this = *this + x;
+ }
+
+BigNum& BigNum::operator-= (const BigNum x)
+  {
+    return *this = *this - x;
+  }
+
+BigNum& BigNum::operator*= (const BigNum x)
+  {
+    return *this = *this * x;
+  }
+
+BigNum& BigNum::operator/= (const BigNum x)
+  {
+    return *this = *this / x;
+  }
+
+BigNum& BigNum::operator%= (const BigNum x)
+{
+    return *this = *this%x;
+}

@@ -5,13 +5,11 @@ using namespace std;
 
 int main()
 {
-    BigNum kek("48602850238572");
-    BigNum lel("1846602860286");
-    BigNum one("");
-    BigNum two("9999999");
+    BigNum one("256743134645854");
+    BigNum two("7");
+    BigNum res("36677590663693");
 
-
-    cout << kek*lel<< endl << one*two;
+    cout << (one/two==res);
     return 0;
 }
 
